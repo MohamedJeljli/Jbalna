@@ -1,0 +1,30 @@
+{
+  "name": "jbalna-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "REST API of Jbalna: hikes, guides, bookings and reviews",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.ts",
+    "dev": "node --watch --env-file-if-exists=.env src/index.ts",
+    "db:setup": "node --env-file-if-exists=.env src/db/setup.ts",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
+}
