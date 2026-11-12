@@ -22,9 +22,12 @@ export function load<T>(request: Observable<T>): Observable<Load<T>> {
 /** A readable message for any failed API call. */
 export function apiMessage(error: unknown): string {
   if (error instanceof HttpErrorResponse) {
-    if (error.status === 0) return 'Cannot reach the Jbalna server. Is the API running?';
-    const message = (error.error as { message?: string } | null)?.message;
-    if (message) return message;
+    // Our API always answers JSON { message }. Anything else (no answer, an HTML page, a proxy
+    // error) means the request never reached it.
+    const body = error.error as { message?: unknown } | null;
+    const fromApi = typeof body === 'object' && body !== null && !(body instanceof Error) && typeof body.message === 'string';
+    if (fromApi) return body.message as string;
+    return 'Cannot reach the Jbalna API. Make sure it is running (npm run api) and try again.';
   }
   return 'Something went wrong. Please try again.';
 }
