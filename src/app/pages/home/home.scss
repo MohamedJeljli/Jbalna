@@ -1,0 +1,147 @@
+// Hero: forest green, with the ridges and sun of the Jbalna cover
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 48px 0 96px;
+  background: var(--forest);
+  color: var(--sand);
+
+  h1 {
+    max-width: 18ch;
+    color: var(--sand);
+  }
+}
+
+.hero__ridges {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  height: 120px;
+}
+
+.hero__sun {
+  display: none;
+  position: absolute;
+  right: 12%;
+  top: 56px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--ochre);
+}
+
+.hero__content {
+  position: relative;
+}
+
+.hero__lead {
+  max-width: 44ch;
+  margin-top: 12px;
+  font-size: 18px;
+  opacity: 0.85;
+}
+
+// Quick search: stacked on mobile, one bar from tablet up
+.search {
+  display: grid;
+  gap: 4px;
+  margin-top: 28px;
+  padding: 8px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  color: var(--slate);
+}
+
+.search__field {
+  min-width: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+
+  label {
+    display: block;
+    color: var(--forest);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  select,
+  input {
+    width: 100%;
+    min-height: 28px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.search__submit {
+  margin-top: 4px;
+}
+
+.popular {
+  padding-block: 40px 56px;
+}
+
+.popular__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.popular__grid {
+  display: grid;
+  gap: 20px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .popular__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 72px 0 148px;
+  }
+
+  .hero__ridges {
+    height: 180px;
+  }
+
+  .hero__sun {
+    display: block;
+  }
+
+  .search {
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: center;
+    max-width: 880px;
+  }
+
+  .search__field {
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+
+    &:nth-of-type(3) {
+      border-right: 0;
+    }
+  }
+
+  .search__submit {
+    margin: 0 0 0 4px;
+    padding-inline: 28px;
+  }
+}
+
+@media (min-width: 960px) {
+  .popular__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

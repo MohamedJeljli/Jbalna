@@ -1,0 +1,41 @@
+<header class="header">
+  <div class="container header__bar">
+    <a class="header__logo" routerLink="/" (click)="closeMenu()">Jbalna</a>
+
+    <button
+      class="header__toggle"
+      type="button"
+      aria-controls="main-menu"
+      [attr.aria-expanded]="menuOpen()"
+      (click)="toggleMenu()"
+    >
+      <span class="sr-only">Menu</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        @if (menuOpen()) {
+          <path d="M6 6l12 12M18 6L6 18" />
+        } @else {
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        }
+      </svg>
+    </button>
+
+    <div id="main-menu" class="header__menu" [class.is-open]="menuOpen()" (click)="closeMenu()">
+      <nav class="header__nav" aria-label="Main">
+        @for (link of links; track link.path) {
+          <a [routerLink]="link.path" routerLinkActive="is-active">{{ link.label }}</a>
+        }
+      </nav>
+
+      <div class="header__actions">
+        <a class="header__search" routerLink="/explore" aria-label="Search hikes">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M16.5 16.5L21 21" />
+          </svg>
+        </a>
+        <a class="btn btn--text" routerLink="/login">Log in</a>
+        <a class="btn btn--primary" routerLink="/signup">Sign up</a>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,54 @@
+<section class="hero">
+  <svg class="hero__ridges" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 220 L0 150 L165 70 L290 140 L420 30 L620 160 L690 110 L830 215 L975 50 L1125 160 L1260 95 L1440 190 L1440 220 Z" fill="#22352c" />
+    <path d="M0 220 L0 195 L225 150 L400 205 L600 135 L810 212 L1010 155 L1200 205 L1440 165 L1440 220 Z" fill="#2c463a" />
+  </svg>
+  <span class="hero__sun" aria-hidden="true"></span>
+
+  <div class="container hero__content">
+    <h1>Find your guide, conquer your mountain.</h1>
+    <p class="hero__lead">The first platform connecting hikers and local guides in Tunisia.</p>
+
+    <form class="search" role="search" [formGroup]="search" (ngSubmit)="onSearch()">
+      <div class="search__field">
+        <label for="search-mountain">Mountain</label>
+        <select id="search-mountain" formControlName="mountain">
+          <option value="">All mountains</option>
+          @for (mountain of mountains; track mountain) {
+            <option [value]="mountain">{{ mountain }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="search__field">
+        <label for="search-date">Date</label>
+        <input id="search-date" type="date" formControlName="date" [min]="today" />
+      </div>
+
+      <div class="search__field">
+        <label for="search-level">Level</label>
+        <select id="search-level" formControlName="level">
+          <option value="">All levels</option>
+          @for (level of levels; track level) {
+            <option [value]="level">{{ level }}</option>
+          }
+        </select>
+      </div>
+
+      <button class="btn btn--primary search__submit" type="submit">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="popular container" aria-labelledby="popular-title">
+  <div class="popular__head">
+    <h2 id="popular-title">Popular this week</h2>
+    <a class="link-arrow" routerLink="/explore">See all →</a>
+  </div>
+
+  <ul class="popular__grid">
+    @for (hike of popularHikes(); track hike.id) {
+      <li><app-hike-card [hike]="hike" /></li>
+    }
+  </ul>
+</section>

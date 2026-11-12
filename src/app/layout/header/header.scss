@@ -1,0 +1,111 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.header__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+}
+
+.header__logo {
+  color: var(--forest);
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.header__toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--forest);
+  cursor: pointer;
+}
+
+// Mobile first: the menu is a panel under the bar, opened by the toggle
+.header__menu {
+  display: none;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+
+  &.is-open {
+    display: flex;
+  }
+}
+
+.header__nav {
+  display: flex;
+  flex-direction: column;
+
+  a {
+    padding: 10px 0;
+    color: var(--forest);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover,
+    &.is-active {
+      color: var(--terracotta);
+    }
+  }
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__search {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--forest);
+
+  &:hover {
+    color: var(--terracotta);
+  }
+}
+
+@media (min-width: 768px) {
+  .header__toggle {
+    display: none;
+  }
+
+  .header__menu,
+  .header__menu.is-open {
+    display: flex;
+    flex: 1;
+    flex-basis: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 32px;
+    padding-bottom: 0;
+  }
+
+  .header__nav {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .header__search {
+    display: grid;
+  }
+}

@@ -1,0 +1,17 @@
+<a class="card" [routerLink]="['/hikes', hike().id]">
+  <svg class="card__art" viewBox="0 0 300 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect width="300" height="120" [attr.fill]="hike().art.sky" />
+    <circle [attr.cx]="hike().art.sunX" cy="34" r="14" fill="#f5f0e6" />
+    <path d="M0 120 L0 82 L70 46 L125 88 L190 18 L255 76 L300 54 L300 120 Z" [attr.fill]="hike().art.ridge" />
+    <path d="M0 120 L0 104 L85 70 L160 106 L235 80 L300 100 L300 120 Z" [attr.fill]="hike().art.front" />
+  </svg>
+
+  <div class="card__body">
+    <h3 class="card__title">{{ hike().mountain }}</h3>
+    <p class="card__facts">
+      <span class="badge" [class]="'badge--' + hike().level.toLowerCase()">{{ hike().level }}</span>
+      <span>{{ hike().durationHours }} h</span>
+      <span class="card__price">{{ hike().priceDt }} DT</span>
+    </p>
+  </div>
+</a>
