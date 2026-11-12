@@ -1,0 +1,89 @@
+// Shared by the Log in and Sign up pages.
+
+.auth {
+  display: grid;
+  justify-items: center;
+}
+
+.auth__card {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  max-width: 460px;
+}
+
+.auth__intro {
+  margin-top: -8px;
+}
+
+.auth__switch {
+  text-align: center;
+
+  a {
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+}
+
+.demo {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--sand);
+  font-size: 14px;
+
+  code {
+    font-size: 14px;
+  }
+}
+
+.demo__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+// Sign up: "I am a..." role cards
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.role {
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  span {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    border: 1.5px solid #cfc6b4;
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--forest);
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  small {
+    color: var(--slate);
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  input:checked + span {
+    border: 2.5px solid var(--forest);
+    background: var(--paper);
+  }
+
+  input:focus-visible + span {
+    outline: 3px solid var(--ochre);
+    outline-offset: 2px;
+  }
+}

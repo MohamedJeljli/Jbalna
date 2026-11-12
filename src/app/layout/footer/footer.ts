@@ -10,11 +10,11 @@ import { RouterLink } from '@angular/router';
 export class Footer {
   protected readonly year = new Date().getFullYear();
 
-  protected readonly links = [
+  protected readonly links: { path: string; label: string; fragment?: string }[] = [
     { path: '/about', label: 'About' },
     { path: '/contact', label: 'Contact' },
     { path: '/become-a-guide', label: 'Become a guide' },
-    { path: '/faq', label: 'FAQ' },
+    { path: '/about', label: 'FAQ', fragment: 'faq' },
   ];
 
   // Only English exists for now; French and Arabic (RTL) come with the translations.

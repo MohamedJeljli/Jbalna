@@ -1,0 +1,71 @@
+.back {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.profile {
+  display: grid;
+  gap: 20px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+  }
+}
+
+.profile__text {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.profile__meta {
+  font-size: 18px;
+}
+
+.profile__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.profile__bio {
+  max-width: 65ch;
+}
+
+.section {
+  margin-top: 48px;
+}
+
+.reviews {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.review {
+  display: grid;
+  gap: 10px;
+
+  blockquote {
+    margin: 0;
+    color: var(--forest);
+  }
+}
+
+.review__stars {
+  color: #b07a12;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.review__by {
+  font-size: 14px;
+}

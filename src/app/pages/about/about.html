@@ -1,0 +1,53 @@
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow hero__eyebrow">About us</p>
+    <h1>“Jbalna” means “our mountains”.</h1>
+    <p class="lead hero__lead">
+      Tunisia has wild ridges, cedar and oak forests and a summit at 1,544 m, yet hiking here still runs on Facebook groups and word of mouth. Jbalna gives the mountains one meeting point.
+    </p>
+  </div>
+</section>
+
+<div class="container page">
+  <section class="problems" aria-labelledby="why-title">
+    <h2 id="why-title" class="section-title">Why we built it</h2>
+    <ul class="card-grid">
+      <li class="panel">
+        <h3>Scattered information</h3>
+        <p>Hikes are shared in chats and groups, with no reliable sheet: distance, elevation, difficulty.</p>
+      </li>
+      <li class="panel">
+        <h3>Uncertain safety</h3>
+        <p>Going alone on the Chambi or in the Kroumirie means risks with the route, the terrain and the weather.</p>
+      </li>
+      <li class="panel">
+        <h3>Invisible guides</h3>
+        <p>Local guides live on word of mouth and have no shop window to publish their routes.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="two" aria-label="For hikers and for guides">
+    <div class="panel two__card">
+      <h2>For hikers</h2>
+      <p>Find a hike at your level, see the date, price and difficulty, and book in a few clicks with a guide other hikers recommend.</p>
+      <a class="btn btn--primary" routerLink="/explore">Explore hikes</a>
+    </div>
+    <div class="panel two__card two__card--dark">
+      <h2>For guides</h2>
+      <p>Publish your routes and dates, fill your spots, and build your reputation with the reviews of your hikers.</p>
+      <a class="btn btn--primary" routerLink="/become-a-guide">Become a guide</a>
+    </div>
+  </section>
+
+  <section id="faq" class="faq" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="section-title">Frequently asked questions</h2>
+    @for (item of faq; track item.q) {
+      <details class="faq__item">
+        <summary>{{ item.q }}</summary>
+        <p>{{ item.a }}</p>
+      </details>
+    }
+    <p class="faq__more">Another question? <a class="link-arrow" routerLink="/contact">Contact us →</a></p>
+  </section>
+</div>

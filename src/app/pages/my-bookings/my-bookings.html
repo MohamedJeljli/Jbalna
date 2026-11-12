@@ -1,0 +1,98 @@
+<div class="container page narrow">
+  <header class="page-head">
+    <p class="eyebrow">Hiker space</p>
+    <h1>My bookings</h1>
+  </header>
+
+  @if (error()) {
+    <div class="state state--error">
+      <p>{{ error() }}</p>
+      <button class="btn btn--outline" type="button" (click)="load()">Try again</button>
+    </div>
+  } @else if (bookings() === null) {
+    <div class="skeleton" aria-busy="true"></div>
+  } @else {
+    <section aria-labelledby="upcoming-title">
+      <h2 id="upcoming-title" class="section-title">Upcoming</h2>
+      @for (b of upcoming(); track b.id) {
+        <article class="booking">
+          <app-mountain-art class="booking__art" [level]="b.level" [seed]="b.hikeId" />
+          <div class="booking__body">
+            <h3 class="booking__title">{{ b.mountain }}</h3>
+            <p>{{ b.date | date: 'EEE d MMM y' }} · {{ b.spots }} {{ b.spots === 1 ? 'spot' : 'spots' }} · with {{ b.guideName }}</p>
+            <p class="booking__meeting">Meeting point: {{ b.meetingPoint }}</p>
+            <div class="booking__actions">
+              <span class="pill pill--ok">Confirmed</span>
+              <a class="btn btn--outline btn--small" [routerLink]="['/hikes', b.hikeId]">Details</a>
+              <button class="btn btn--text btn--small" type="button" (click)="cancel(b)" [disabled]="busy() === b.id">Cancel booking</button>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <div class="state">
+          <p>No upcoming hike. Time to plan your next summit!</p>
+          <a class="btn btn--primary" routerLink="/explore">Explore hikes</a>
+        </div>
+      }
+    </section>
+
+    @if (past().length) {
+      <section class="past" aria-labelledby="past-title">
+        <h2 id="past-title" class="section-title">Past and cancelled</h2>
+        @for (b of past(); track b.id) {
+          <article class="booking booking--past">
+            <app-mountain-art class="booking__art" [level]="b.level" [seed]="b.hikeId" />
+            <div class="booking__body">
+              <h3 class="booking__title">{{ b.mountain }}</h3>
+              <p>{{ b.date | date: 'EEE d MMM y' }} · {{ b.spots }} {{ b.spots === 1 ? 'spot' : 'spots' }} · with {{ b.guideName }}</p>
+
+              <div class="booking__actions">
+                @if (b.status === 'cancelled') {
+                  <span class="pill pill--muted">Cancelled</span>
+                } @else if (b.reviewRating) {
+                  <span class="pill pill--ok">Done</span>
+                  <span class="your-review" [attr.aria-label]="'Your review: ' + b.reviewRating + ' out of 5'">Your review: {{ stars(b.reviewRating) }}</span>
+                } @else {
+                  <span class="pill pill--ok">Done</span>
+                  <button class="btn btn--primary btn--small" type="button" (click)="openReview(b.id)" [attr.aria-expanded]="reviewing() === b.id">
+                    Leave a review
+                  </button>
+                }
+              </div>
+
+              @if (reviewing() === b.id) {
+                <form class="form review-form" [formGroup]="reviewForm" (ngSubmit)="sendReview(b)" novalidate>
+                  <fieldset class="field">
+                    <legend>Your rating for {{ b.guideName }}</legend>
+                    <div class="rating">
+                      @for (n of ratings; track n) {
+                        <input type="radio" [id]="'r' + b.id + '-' + n" formControlName="rating" [value]="n" />
+                        <label [for]="'r' + b.id + '-' + n" [title]="n + ' out of 5'">
+                          <span class="sr-only">{{ n }} out of 5</span>★
+                        </label>
+                      }
+                    </div>
+                    @if (reviewForm.controls.rating.touched && reviewForm.controls.rating.invalid) {
+                      <span class="field__error">Please choose a rating.</span>
+                    }
+                  </fieldset>
+                  <div class="field">
+                    <label [for]="'comment' + b.id">Your comment</label>
+                    <textarea [id]="'comment' + b.id" class="input" formControlName="comment" placeholder="How was the hike and the guide?"></textarea>
+                    @if (reviewForm.controls.comment.touched && reviewForm.controls.comment.invalid) {
+                      <span class="field__error">A few words, please (at least 5 characters).</span>
+                    }
+                  </div>
+                  <div class="booking__actions">
+                    <button class="btn btn--primary btn--small" type="submit" [disabled]="busy() === b.id">Send review</button>
+                    <button class="btn btn--text btn--small" type="button" (click)="reviewing.set(null)">Cancel</button>
+                  </div>
+                </form>
+              }
+            </div>
+          </article>
+        }
+      </section>
+    }
+  }
+</div>

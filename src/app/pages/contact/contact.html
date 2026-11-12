@@ -1,0 +1,63 @@
+<div class="container page layout">
+  <header class="intro">
+    <p class="eyebrow">Contact</p>
+    <h1>Talk to the Jbalna team</h1>
+    <p class="lead">A question about a hike, a problem with a booking, or you want to guide with us? Write to us, we answer within two days.</p>
+    <ul class="facts">
+      <li><strong>Email</strong> contact&#64;jbalna.tn</li>
+      <li><strong>Based in</strong> Tunis, Tunisia</li>
+      <li><strong>Hours</strong> Monday to Friday, 9:00 to 17:00</li>
+    </ul>
+  </header>
+
+  <section class="panel" aria-labelledby="form-title">
+    <h2 id="form-title" class="form-title">Send us a message</h2>
+
+    @if (sent()) {
+      <div class="sent" role="status">
+        <p class="sent__icon" aria-hidden="true">✓</p>
+        <p><strong>Thank you, {{ form.controls.name.value.split(' ')[0] }}!</strong> Your message has reached us.</p>
+        <button class="btn btn--outline" type="button" (click)="another()">Send another message</button>
+      </div>
+    } @else {
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        @if (error()) {
+          <p class="form-error" role="alert">{{ error() }}</p>
+        }
+        <div class="form-row">
+          <div class="field">
+            <label for="c-name">Name</label>
+            <input id="c-name" class="input" type="text" formControlName="name" autocomplete="name" />
+            @if (form.controls.name.touched && form.controls.name.invalid) {
+              <span class="field__error">Please enter your name.</span>
+            }
+          </div>
+          <div class="field">
+            <label for="c-email">Email</label>
+            <input id="c-email" class="input" type="email" formControlName="email" autocomplete="email" />
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <span class="field__error">Please enter a valid email address.</span>
+            }
+          </div>
+        </div>
+        <div class="field">
+          <label for="c-subject">Subject</label>
+          <select id="c-subject" class="input" formControlName="subject">
+            @for (subject of subjects; track subject) {
+              <option [value]="subject">{{ subject }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" class="input" formControlName="message" maxlength="2000"></textarea>
+          <span class="field__hint">{{ form.controls.message.value.length }} / 2000</span>
+          @if (form.controls.message.touched && form.controls.message.invalid) {
+            <span class="field__error">Your message needs at least 10 characters.</span>
+          }
+        </div>
+        <button class="btn btn--primary" type="submit" [disabled]="sending()">{{ sending() ? 'Sending…' : 'Send message' }}</button>
+      </form>
+    }
+  </section>
+</div>

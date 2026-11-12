@@ -1,0 +1,270 @@
+<div class="container page dash">
+  <!-- 1. Side menu of the guide space -->
+  <nav class="dash__menu" aria-label="Guide space">
+    <a routerLink="/dashboard" fragment="overview">Dashboard</a>
+    <a routerLink="/dashboard" fragment="hikes">My hikes</a>
+    <a routerLink="/dashboard" fragment="routes">My routes</a>
+    <a routerLink="/dashboard" fragment="reviews">Reviews</a>
+    @if (data(); as d) {
+      <a [routerLink]="['/guides', d.guide.id]">Public profile</a>
+    }
+  </nav>
+
+  <div class="dash__main">
+    @if (error()) {
+      <div class="state state--error">
+        <p>{{ error() }}</p>
+        <button class="btn btn--outline" type="button" (click)="load()">Try again</button>
+      </div>
+    } @else if (data(); as d) {
+      <header id="overview" class="dash__head">
+        <div>
+          <p class="eyebrow">Guide space</p>
+          <h1>Hello, {{ firstName(d.guide.name) }}</h1>
+          @if (!d.guide.verified) {
+            <p class="pending">Your profile is waiting for verification by the Jbalna team.</p>
+          }
+        </div>
+        <!-- 2. Main action, always visible -->
+        <button class="btn btn--primary" type="button" (click)="open('hike')" [attr.aria-expanded]="panel() === 'hike'">+ New hike</button>
+      </header>
+
+      <!-- 3. Key figures -->
+      <ul class="stats">
+        <li class="panel stat"><span class="stat__label">Upcoming hikes</span><strong>{{ d.stats.upcomingHikes }}</strong></li>
+        <li class="panel stat"><span class="stat__label">Booked spots</span><strong>{{ d.stats.bookedSpots }}</strong></li>
+        <li class="panel stat">
+          <span class="stat__label">Rating</span>
+          <strong>{{ d.stats.rating ?? '–' }}</strong>
+          <span class="stat__sub">{{ d.guide.reviewCount }} {{ d.guide.reviewCount === 1 ? 'review' : 'reviews' }}</span>
+        </li>
+      </ul>
+
+      <!-- New hike form -->
+      @if (panel() === 'hike') {
+        <section class="panel form-panel" aria-labelledby="new-hike-title">
+          <h2 id="new-hike-title" class="form-panel__title">Publish a new hike</h2>
+          @if (routes().length === 0) {
+            <p>A hike is a date on one of your routes. Create your first route, then add its dates.</p>
+            <button class="btn btn--primary" type="button" (click)="open('route')">+ New route</button>
+          } @else {
+            <form class="form" [formGroup]="hikeForm" (ngSubmit)="createHike()" novalidate>
+              <div class="field">
+                <label for="h-route">Route</label>
+                <select id="h-route" class="input" formControlName="routeId">
+                  @for (r of routes(); track r.id) {
+                    <option [ngValue]="r.id">{{ r.title }} ({{ r.mountain }}, {{ r.level }})</option>
+                  }
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="h-date">Date</label>
+                  <input id="h-date" class="input" type="date" formControlName="date" [min]="today" />
+                  @if (hikeForm.controls.date.touched && hikeForm.controls.date.invalid) {
+                    <span class="field__error">Choose a date.</span>
+                  }
+                </div>
+                <div class="field">
+                  <label for="h-price">Price per person (DT)</label>
+                  <input id="h-price" class="input" type="number" min="1" max="1000" formControlName="priceDt" />
+                  @if (hikeForm.controls.priceDt.touched && hikeForm.controls.priceDt.invalid) {
+                    <span class="field__error">Between 1 and 1000 DT.</span>
+                  }
+                </div>
+                <div class="field">
+                  <label for="h-spots">Spots</label>
+                  <input id="h-spots" class="input" type="number" min="1" max="30" formControlName="spots" />
+                  @if (hikeForm.controls.spots.touched && hikeForm.controls.spots.invalid) {
+                    <span class="field__error">Between 1 and 30.</span>
+                  }
+                </div>
+              </div>
+              <div class="field">
+                <label for="h-meeting">Meeting point and time</label>
+                <input id="h-meeting" class="input" type="text" formControlName="meetingPoint" placeholder="e.g. Water Temple car park, Zaghouan, 8:00" />
+                @if (hikeForm.controls.meetingPoint.touched && hikeForm.controls.meetingPoint.invalid) {
+                  <span class="field__error">Tell hikers where to meet you.</span>
+                }
+              </div>
+              <div class="form-panel__actions">
+                <button class="btn btn--primary" type="submit" [disabled]="saving()">{{ saving() ? 'Publishing…' : 'Publish hike' }}</button>
+                <button class="btn btn--text" type="button" (click)="panel.set(null)">Cancel</button>
+              </div>
+            </form>
+          }
+        </section>
+      }
+
+      <!-- 4. Upcoming hikes with spots filled -->
+      <section id="hikes" class="block" aria-labelledby="hikes-title">
+        <h2 id="hikes-title" class="section-title">Upcoming hikes</h2>
+        @if (d.upcoming.length) {
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th scope="col">Date</th><th scope="col">Hike</th><th scope="col">Spots</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Actions</span></th></tr>
+              </thead>
+              <tbody>
+                @for (h of d.upcoming; track h.id) {
+                  <tr>
+                    <td>{{ h.date | date: 'EEE d MMM' }}</td>
+                    <td><a [routerLink]="['/hikes', h.id]">{{ h.route.title }}</a></td>
+                    <td>{{ h.booked }} / {{ h.spots }}</td>
+                    <td>
+                      @if (h.spotsLeft === 0) {
+                        <span class="pill pill--warn">Full</span>
+                      } @else {
+                        <span class="pill pill--ok">Open</span>
+                      }
+                    </td>
+                    <td>
+                      <button class="btn btn--text btn--small" type="button" (click)="toggleParticipants(h.id)" [attr.aria-expanded]="openHike() === h.id">
+                        Participants
+                      </button>
+                    </td>
+                  </tr>
+                  @if (openHike() === h.id) {
+                    <tr class="participants">
+                      <td colspan="5">
+                        @if (participants(); as list) {
+                          @if (list.length) {
+                            <ul>
+                              @for (p of list; track p.id) {
+                                <li><strong>{{ p.name }}</strong> · {{ p.spots }} {{ p.spots === 1 ? 'spot' : 'spots' }} · <a [href]="'mailto:' + p.email">{{ p.email }}</a></li>
+                              }
+                            </ul>
+                          } @else {
+                            <p>No booking yet.</p>
+                          }
+                        } @else {
+                          <p>Loading…</p>
+                        }
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="state"><p>No upcoming hike. Publish one with “+ New hike”.</p></div>
+        }
+      </section>
+
+      <!-- My routes -->
+      <section id="routes" class="block" aria-labelledby="routes-title">
+        <div class="block__head">
+          <h2 id="routes-title">My routes</h2>
+          <button class="btn btn--outline btn--small" type="button" (click)="open('route')" [attr.aria-expanded]="panel() === 'route'">+ New route</button>
+        </div>
+
+        @if (panel() === 'route') {
+          <section class="panel form-panel" aria-labelledby="new-route-title">
+            <h3 id="new-route-title" class="form-panel__title">Create a route</h3>
+            <form class="form" [formGroup]="routeForm" (ngSubmit)="createRoute()" novalidate>
+              <div class="form-row">
+                <div class="field">
+                  <label for="r-title">Title</label>
+                  <input id="r-title" class="input" type="text" formControlName="title" placeholder="e.g. Zaghouan summit loop" />
+                  @if (routeForm.controls.title.touched && routeForm.controls.title.invalid) {
+                    <span class="field__error">At least 3 characters.</span>
+                  }
+                </div>
+                <div class="field">
+                  <label for="r-mountain">Mountain</label>
+                  <input id="r-mountain" class="input" type="text" formControlName="mountain" placeholder="e.g. Djebel Zaghouan" />
+                  @if (routeForm.controls.mountain.touched && routeForm.controls.mountain.invalid) {
+                    <span class="field__error">Which mountain?</span>
+                  }
+                </div>
+                <div class="field">
+                  <label for="r-region">Region</label>
+                  <input id="r-region" class="input" type="text" formControlName="region" placeholder="e.g. Zaghouan" />
+                  @if (routeForm.controls.region.touched && routeForm.controls.region.invalid) {
+                    <span class="field__error">Which region?</span>
+                  }
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="r-level">Level</label>
+                  <select id="r-level" class="input" formControlName="level">
+                    @for (level of levels; track level) {
+                      <option [value]="level">{{ level }}</option>
+                    }
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="r-km">Distance (km)</label>
+                  <input id="r-km" class="input" type="number" step="0.5" formControlName="distanceKm" />
+                </div>
+                <div class="field">
+                  <label for="r-elev">Elevation gain (m)</label>
+                  <input id="r-elev" class="input" type="number" step="10" formControlName="elevationM" />
+                </div>
+                <div class="field">
+                  <label for="r-hours">Duration (h)</label>
+                  <input id="r-hours" class="input" type="number" step="0.5" formControlName="durationHours" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="r-desc">Description</label>
+                <textarea id="r-desc" class="input" formControlName="description" placeholder="The trail, what makes it special, what to bring…"></textarea>
+                @if (routeForm.controls.description.touched && routeForm.controls.description.invalid) {
+                  <span class="field__error">At least 20 characters, so hikers know what to expect.</span>
+                }
+              </div>
+              <div class="form-panel__actions">
+                <button class="btn btn--primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Create route' }}</button>
+                <button class="btn btn--text" type="button" (click)="panel.set(null)">Cancel</button>
+              </div>
+            </form>
+          </section>
+        }
+
+        @if (routes().length) {
+          <ul class="routes">
+            @for (r of routes(); track r.id) {
+              <li class="panel route">
+                <div>
+                  <h3 class="route__title">{{ r.title }}</h3>
+                  <p class="route__meta">
+                    <span class="badge" [class]="'badge--' + r.level.toLowerCase()">{{ r.level }}</span>
+                    {{ r.mountain }} · {{ r.distanceKm }} km · {{ r.durationHours }} h · {{ r.upcomingHikes }} upcoming
+                  </p>
+                </div>
+                <button class="btn btn--outline btn--small" type="button" (click)="open('hike', r.id)">Add a date</button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="state"><p>No route yet. Create your first one.</p></div>
+        }
+      </section>
+
+      <!-- 5. Latest reviews -->
+      <section id="reviews" class="block" aria-labelledby="reviews-title">
+        <div class="block__head">
+          <h2 id="reviews-title">Latest reviews</h2>
+          <app-stars [rating]="d.stats.rating" [count]="d.guide.reviewCount" />
+        </div>
+        @if (d.reviews.length) {
+          <ul class="reviews">
+            @for (rv of d.reviews; track rv.id) {
+              <li class="panel">
+                <p class="review__stars" [attr.aria-label]="rv.rating + ' out of 5'">{{ stars(rv.rating) }}</p>
+                <p>“{{ rv.comment }}”</p>
+                <p class="review__by">{{ rv.hikerName }} · {{ rv.routeTitle }}</p>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="state"><p>No review yet. They appear here after your hikes.</p></div>
+        }
+      </section>
+    } @else {
+      <div class="skeleton" aria-busy="true"></div>
+    }
+  </div>
+</div>

@@ -37,7 +37,7 @@ function toGuide(row: RowDataPacket) {
 
 async function latestReviews(guideId: number, limit: number) {
   const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT rv.id, rv.rating, rv.comment, rv.created_at AS createdAt, u.name AS hikerName, r.title AS routeTitle
+    `SELECT rv.id, rv.rating, rv.comment, DATE_FORMAT(rv.created_at, '%Y-%m-%d') AS createdAt, u.name AS hikerName, r.title AS routeTitle
      FROM reviews rv
      JOIN users u ON u.id = rv.hiker_id
      JOIN bookings b ON b.id = rv.booking_id

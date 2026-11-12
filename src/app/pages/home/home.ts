@@ -1,8 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { LEVELS, MOUNTAINS } from '../../core/hike';
+import { catchError, of } from 'rxjs';
 import { HikeService } from '../../core/hike.service';
+import { LOADING, load } from '../../core/load';
+import { LEVELS } from '../../core/models';
 import { HikeCard } from '../../shared/hike-card/hike-card';
 
 @Component({
@@ -13,9 +16,12 @@ import { HikeCard } from '../../shared/hike-card/hike-card';
 })
 export class Home {
   private readonly router = inject(Router);
+  private readonly hikes = inject(HikeService);
 
-  protected readonly popularHikes = inject(HikeService).popular;
-  protected readonly mountains = MOUNTAINS;
+  protected readonly popular = toSignal(load(this.hikes.popular()), { initialValue: LOADING });
+  protected readonly mountains = toSignal(this.hikes.mountains().pipe(catchError(() => of([]))), {
+    initialValue: [],
+  });
   protected readonly levels = LEVELS;
   protected readonly today = new Date().toISOString().slice(0, 10);
 
@@ -31,5 +37,9 @@ export class Home {
       Object.entries(this.search.getRawValue()).filter(([, value]) => value !== ''),
     );
     this.router.navigate(['/explore'], { queryParams: filters });
+  }
+
+  protected retry(): void {
+    location.reload();
   }
 }

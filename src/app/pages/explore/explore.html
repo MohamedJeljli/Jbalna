@@ -1,0 +1,147 @@
+<div class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Explore</p>
+    <h1>Hikes with local guides</h1>
+  </header>
+
+  <div class="layout">
+    <!-- 1. Filters -->
+    <aside class="filters panel" aria-labelledby="filters-title">
+      <div class="filters__head">
+        <h2 id="filters-title" class="filters__title">Filters</h2>
+        <button
+          class="btn btn--outline btn--small filters__toggle"
+          type="button"
+          aria-controls="filters-form"
+          [attr.aria-expanded]="filtersOpen()"
+          (click)="toggleFilters()"
+        >
+          {{ filtersOpen() ? 'Hide' : 'Show' }}
+        </button>
+      </div>
+
+      <form id="filters-form" class="form filters__form" [class.is-open]="filtersOpen()" [formGroup]="filters" (ngSubmit)="$event.preventDefault()">
+        <div class="field">
+          <label for="f-q">Search</label>
+          <input id="f-q" class="input" type="search" formControlName="q" placeholder="Mountain, region, trail…" />
+        </div>
+
+        <div class="field">
+          <label for="f-mountain">Mountain</label>
+          <select id="f-mountain" class="input" formControlName="mountain">
+            <option value="">All mountains</option>
+            @for (mountain of mountains(); track mountain) {
+              <option [value]="mountain">{{ mountain }}</option>
+            }
+          </select>
+        </div>
+
+        <fieldset class="field">
+          <legend>Level</legend>
+          <div class="levels">
+            <label class="level-option">
+              <input type="radio" formControlName="level" value="" />
+              <span>All</span>
+            </label>
+            @for (level of levels; track level) {
+              <label class="level-option">
+                <input type="radio" formControlName="level" [value]="level" />
+                <span>{{ level }}</span>
+              </label>
+            }
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="f-date">Date</label>
+          <input id="f-date" class="input" type="date" formControlName="date" [min]="today" />
+        </div>
+
+        <div class="field">
+          <label for="f-price">
+            Max price:
+            {{ filters.controls.maxPrice.value < noPriceLimit ? filters.controls.maxPrice.value + ' DT' : 'any' }}
+          </label>
+          <input id="f-price" type="range" min="20" [max]="noPriceLimit" step="5" formControlName="maxPrice" />
+        </div>
+
+        <button class="btn btn--text btn--small filters__reset" type="button" (click)="reset()">Reset filters</button>
+      </form>
+    </aside>
+
+    <section class="results" aria-labelledby="results-title">
+      <!-- 2. Count and sort -->
+      @let state = results();
+      <div class="results__head">
+        <h2 id="results-title" class="results__title" aria-live="polite">
+          @if (state.loading) {
+            Searching…
+          } @else if (state.data) {
+            {{ state.data.length }} {{ state.data.length === 1 ? 'hike' : 'hikes' }}
+          } @else {
+            Hikes
+          }
+        </h2>
+        <div class="results__sort" [formGroup]="filters">
+          <label for="f-sort">Sort by</label>
+          <select id="f-sort" class="input" formControlName="sort">
+            <option value="date">Date</option>
+            <option value="price">Price</option>
+            <option value="rating">Guide rating</option>
+            <option value="popular">Popularity</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. Result cards -->
+      @if (state.loading) {
+        <div class="results__list" aria-busy="true">
+          <div class="skeleton row-skeleton"></div>
+          <div class="skeleton row-skeleton"></div>
+          <div class="skeleton row-skeleton"></div>
+        </div>
+      } @else if (state.error) {
+        <div class="state state--error"><p>{{ state.error }}</p></div>
+      } @else if (state.data?.length) {
+        <ul class="results__list">
+          @for (hike of state.data; track hike.id) {
+            <li>
+              <article class="row">
+                <app-mountain-art class="row__art" [level]="hike.route.level" [seed]="hike.route.id" />
+                <div class="row__main">
+                  <h3 class="row__title">
+                    <a [routerLink]="['/hikes', hike.id]">{{ hike.route.title }}</a>
+                  </h3>
+                  <p class="row__guide">
+                    {{ hike.route.mountain }} · {{ hike.guide.name }}
+                    <app-stars [rating]="hike.guide.rating" />
+                  </p>
+                  <p class="row__facts">
+                    <span class="badge" [class]="'badge--' + hike.route.level.toLowerCase()">{{ hike.route.level }}</span>
+                    <span>{{ hike.route.distanceKm }} km</span>
+                    <span>{{ hike.route.durationHours }} h</span>
+                    <span>{{ hike.date | date: 'EEE d MMM' }}</span>
+                  </p>
+                </div>
+                <div class="row__side">
+                  <p class="row__price">{{ hike.priceDt }} DT</p>
+                  @if (hike.spotsLeft === 0) {
+                    <span class="pill pill--muted">Full</span>
+                  } @else {
+                    <span class="row__spots">{{ hike.spotsLeft }} {{ hike.spotsLeft === 1 ? 'spot' : 'spots' }} left</span>
+                  }
+                  <a class="btn btn--primary btn--small" [routerLink]="['/hikes', hike.id]" [attr.aria-label]="'View ' + hike.route.title">View</a>
+                </div>
+              </article>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="state">
+          <p>No hike matches these filters.</p>
+          <button class="btn btn--outline" type="button" (click)="reset()">Reset filters</button>
+        </div>
+      }
+    </section>
+  </div>
+</div>

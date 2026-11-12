@@ -1,0 +1,45 @@
+<div class="container page auth">
+  <section class="panel auth__card" aria-labelledby="login-title">
+    <h1 id="login-title">Log in</h1>
+    <p class="auth__intro">Good to see you again. Your next summit is waiting.</p>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" class="input" type="email" formControlName="email" autocomplete="email" />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <span class="field__error">Please enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" class="input" type="password" formControlName="password" autocomplete="current-password" />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <span class="field__error">Please enter your password.</span>
+        }
+      </div>
+
+      <button class="btn btn--primary" type="submit" [disabled]="pending()">
+        {{ pending() ? 'Logging in…' : 'Log in' }}
+      </button>
+    </form>
+
+    <p class="auth__switch">
+      No account yet?
+      <a routerLink="/signup" [queryParams]="returnUrl() ? { returnUrl: returnUrl() } : {}">Sign up</a>
+    </p>
+
+    <aside class="demo" aria-label="Demo accounts">
+      <p><strong>Demo accounts</strong> (password <code>jbalna123</code>)</p>
+      <div class="demo__buttons">
+        <button class="btn btn--outline btn--small" type="button" (click)="useDemo('sami@jbalna.tn')">Hiker: Sami</button>
+        <button class="btn btn--outline btn--small" type="button" (click)="useDemo('amira@jbalna.tn')">Guide: Amira</button>
+      </div>
+    </aside>
+  </section>
+</div>

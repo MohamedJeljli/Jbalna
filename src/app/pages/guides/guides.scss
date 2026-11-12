@@ -1,0 +1,54 @@
+.head {
+  display: grid;
+  gap: 20px;
+  align-items: end;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 240px;
+  }
+}
+
+.count {
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.guide {
+  display: grid;
+  gap: 12px;
+  height: 100%;
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+.guide__top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.guide__name {
+  font-size: 24px;
+}
+
+.guide__region {
+  font-size: 14px;
+}
+
+.guide__hikes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}

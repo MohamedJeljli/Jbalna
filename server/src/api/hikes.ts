@@ -117,7 +117,7 @@ hikesRouter.get('/:id/participants', requireAuth('guide'), async (req, res) => {
   if (!owner[0]) throw new HttpError(404, 'Hike not found in your hikes.');
 
   const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT b.id, u.name, u.email, b.spots, b.created_at AS bookedAt
+    `SELECT b.id, u.name, u.email, b.spots, DATE_FORMAT(b.created_at, '%Y-%m-%d') AS bookedAt
      FROM bookings b JOIN users u ON u.id = b.hiker_id
      WHERE b.hike_id = ? AND b.status = 'confirmed' ORDER BY b.created_at`,
     [id],

@@ -1,36 +1,53 @@
-import { Injectable, signal } from '@angular/core';
-import { Hike } from './hike';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Hike, HikeDetail, HikeFilters, MyRoute, Participant } from './models';
 
-// Sample content from the Objective 2 mockup. Replace with calls to the REST API
-// (GET /hikes?popular=true) once the back-end exists.
-const SAMPLE_HIKES: Hike[] = [
-  {
-    id: 1,
-    mountain: 'Djebel Zaghouan',
-    level: 'Medium',
-    durationHours: 5,
-    priceDt: 45,
-    art: { sky: '#e9c77b', ridge: '#2c463a', front: '#17261f', sunX: 236 },
-  },
-  {
-    id: 2,
-    mountain: 'Djebel Ressas',
-    level: 'Hard',
-    durationHours: 6,
-    priceDt: 55,
-    art: { sky: '#d59a72', ridge: '#7c3524', front: '#17261f', sunX: 62 },
-  },
-  {
-    id: 3,
-    mountain: 'Djebel Bargou',
-    level: 'Easy',
-    durationHours: 3,
-    priceDt: 35,
-    art: { sky: '#bcd2c2', ridge: '#2e6b4a', front: '#17261f', sunX: 240 },
-  },
-];
+export interface NewHike {
+  routeId: number;
+  date: string;
+  priceDt: number;
+  spots: number;
+  meetingPoint: string;
+}
+
+export type NewRoute = Omit<MyRoute, 'id' | 'upcomingHikes'>;
 
 @Injectable({ providedIn: 'root' })
 export class HikeService {
-  readonly popular = signal<Hike[]>(SAMPLE_HIKES).asReadonly();
+  private readonly http = inject(HttpClient);
+
+  list(filters: HikeFilters = {}): Observable<Hike[]> {
+    const params = Object.fromEntries(Object.entries(filters).filter(([, value]) => value));
+    return this.http.get<Hike[]>('/api/hikes', { params });
+  }
+
+  popular(): Observable<Hike[]> {
+    return this.list({ sort: 'popular', limit: '3' });
+  }
+
+  mountains(): Observable<string[]> {
+    return this.http.get<string[]>('/api/hikes/mountains');
+  }
+
+  get(id: number | string): Observable<HikeDetail> {
+    return this.http.get<HikeDetail>(`/api/hikes/${id}`);
+  }
+
+  // Guide space
+  create(hike: NewHike): Observable<Hike> {
+    return this.http.post<Hike>('/api/hikes', hike);
+  }
+
+  participants(hikeId: number): Observable<Participant[]> {
+    return this.http.get<Participant[]>(`/api/hikes/${hikeId}/participants`);
+  }
+
+  myRoutes(): Observable<MyRoute[]> {
+    return this.http.get<MyRoute[]>('/api/routes/mine');
+  }
+
+  createRoute(route: NewRoute): Observable<MyRoute> {
+    return this.http.post<MyRoute>('/api/routes', route);
+  }
 }

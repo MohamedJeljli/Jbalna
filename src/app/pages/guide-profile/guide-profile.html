@@ -1,0 +1,67 @@
+<div class="container page">
+  @let s = state();
+  @if (s.loading) {
+    <div class="skeleton" aria-busy="true"></div>
+  } @else if (s.error) {
+    <div class="state state--error">
+      <p>{{ s.error }}</p>
+      <a class="btn btn--outline" routerLink="/guides">See all guides</a>
+    </div>
+  } @else if (s.data; as g) {
+    <a class="back link-arrow" routerLink="/guides">← All guides</a>
+
+    <section class="panel profile">
+      <span class="avatar avatar--large" aria-hidden="true">{{ g.name.charAt(0) }}</span>
+      <div class="profile__text">
+        <h1>{{ g.name }}</h1>
+        <p class="profile__meta">{{ g.region }} · {{ g.experienceYears }} years guiding</p>
+        <div class="profile__badges">
+          @if (g.verified) {
+            <span class="verified">✓ Verified guide</span>
+          } @else {
+            <span class="pill pill--muted">Verification pending</span>
+          }
+          <app-stars [rating]="g.rating" [count]="g.reviewCount" />
+        </div>
+        <ul class="chips" aria-label="Languages">
+          @for (lang of g.languages; track lang) {
+            <li class="chip">{{ lang }}</li>
+          }
+        </ul>
+        @if (g.bio) {
+          <p class="profile__bio">{{ g.bio }}</p>
+        }
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="hikes-title">
+      <h2 id="hikes-title" class="section-title">Upcoming hikes with {{ g.name.split(' ')[0] }}</h2>
+      @if (g.hikes.length) {
+        <ul class="card-grid">
+          @for (hike of g.hikes; track hike.id) {
+            <li><app-hike-card [hike]="hike" /></li>
+          }
+        </ul>
+      } @else {
+        <div class="state"><p>No upcoming hike right now. Check back soon.</p></div>
+      }
+    </section>
+
+    <section class="section" aria-labelledby="reviews-title">
+      <h2 id="reviews-title" class="section-title">Reviews</h2>
+      @if (g.reviews.length) {
+        <ul class="reviews">
+          @for (review of g.reviews; track review.id) {
+            <li class="panel review">
+              <p class="review__stars" [attr.aria-label]="review.rating + ' out of 5'">{{ stars(review.rating) }}</p>
+              <blockquote>“{{ review.comment }}”</blockquote>
+              <p class="review__by">{{ review.hikerName }} · {{ review.routeTitle }} · {{ review.createdAt | date: 'MMM y' }}</p>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="state"><p>No review yet.</p></div>
+      }
+    </section>
+  }
+</div>

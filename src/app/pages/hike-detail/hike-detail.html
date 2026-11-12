@@ -1,0 +1,123 @@
+<div class="container page">
+  @let s = state();
+  @if (s.loading) {
+    <div class="skeleton" aria-busy="true" style="min-height: 420px"></div>
+  } @else if (s.error) {
+    <div class="state state--error">
+      <p>{{ s.error }}</p>
+      <a class="btn btn--outline" routerLink="/explore">Back to Explore</a>
+    </div>
+  } @else if (hike(); as h) {
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a routerLink="/explore">Explore</a>
+      <span aria-hidden="true">›</span>
+      <a routerLink="/explore" [queryParams]="{ mountain: h.route.mountain }">{{ h.route.mountain }}</a>
+      <span aria-hidden="true">›</span>
+      <span aria-current="page">{{ h.route.title }}</span>
+    </nav>
+
+    <div class="layout">
+      <article class="main">
+        <!-- 1. Picture of the route -->
+        <app-mountain-art class="banner" [level]="h.route.level" [seed]="h.route.id" />
+
+        <h1 class="title">{{ h.route.title }}</h1>
+        <p class="subtitle">{{ h.route.mountain }} · {{ h.route.region }}</p>
+
+        <!-- 2. Key facts -->
+        <ul class="chips facts" aria-label="Key facts">
+          <li><span class="badge" [class]="'badge--' + h.route.level.toLowerCase()">{{ h.route.level }}</span></li>
+          <li class="chip">{{ h.route.distanceKm }} km</li>
+          <li class="chip">{{ h.route.elevationM }} m elevation gain</li>
+          <li class="chip">{{ h.route.durationHours }} h</li>
+        </ul>
+
+        <section class="block">
+          <h2 class="block__title">About this hike</h2>
+          <p>{{ h.route.description }}</p>
+        </section>
+
+        <!-- 3. Meeting point -->
+        <section class="block meeting">
+          <svg class="meeting__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
+            <circle cx="12" cy="9.5" r="2.5" />
+          </svg>
+          <div>
+            <h2 class="block__title">Meeting point</h2>
+            <p>{{ h.meetingPoint }}</p>
+            <a class="link-arrow" target="_blank" rel="noopener" [href]="'https://www.openstreetmap.org/search?query=' + h.route.mountain + ', Tunisia'">Open the area on OpenStreetMap →</a>
+          </div>
+        </section>
+      </article>
+
+      <aside class="side">
+        <!-- 4. Booking card -->
+        <section class="panel booking" aria-labelledby="book-title">
+          <h2 id="book-title" class="booking__title">Book this hike</h2>
+
+          @if (h.dates.length === 0) {
+            <p class="booking__none">No upcoming date for this route yet. Check the guide's other hikes.</p>
+          } @else {
+            <fieldset class="field">
+              <legend>Choose a date</legend>
+              @for (d of h.dates; track d.id) {
+                <label class="date-option" [class.is-disabled]="d.spotsLeft === 0">
+                  <input
+                    type="radio"
+                    name="date"
+                    [value]="d.id"
+                    [checked]="d.id === selectedId()"
+                    [disabled]="d.spotsLeft === 0"
+                    (change)="selectedId.set(d.id)"
+                  />
+                  <span class="date-option__date">{{ d.date | date: 'EEE d MMM' }}</span>
+                  <span class="date-option__left">{{ d.spotsLeft === 0 ? 'Full' : d.spotsLeft + ' left' }}</span>
+                </label>
+              }
+            </fieldset>
+
+            @if (selected(); as sel) {
+              <div class="field">
+                <span class="booking__label" id="spots-label">Spots</span>
+                <div class="stepper" role="group" aria-labelledby="spots-label">
+                  <button type="button" (click)="changeSpots(-1)" [disabled]="spots() <= 1" aria-label="One spot less">−</button>
+                  <output aria-live="polite">{{ spots() }}</output>
+                  <button type="button" (click)="changeSpots(1)" [disabled]="spots() >= maxSpots()" aria-label="One spot more">+</button>
+                </div>
+              </div>
+
+              <p class="booking__total">
+                <span>Total</span>
+                <strong>{{ total() }} DT</strong>
+              </p>
+              <p class="booking__unit">{{ sel.priceDt }} DT per person, paid to the guide on the day.</p>
+
+              <button class="btn btn--primary booking__cta" type="button" (click)="book()" [disabled]="booking() || sel.spotsLeft === 0">
+                {{ booking() ? 'Booking…' : user() ? 'Book now' : 'Log in to book' }}
+              </button>
+            } @else {
+              <p class="booking__none">All dates are full.</p>
+            }
+          }
+        </section>
+
+        <!-- 5. Guide card -->
+        <a class="panel guide" [routerLink]="['/guides', h.guide.id]">
+          <span class="avatar" aria-hidden="true">{{ h.guide.name.charAt(0) }}</span>
+          <span class="guide__text">
+            <strong>{{ h.guide.name }}</strong>
+            @if (h.guide.verified) {
+              <span class="verified">✓ Verified guide</span>
+            }
+            <app-stars [rating]="h.guide.rating" [count]="h.guide.reviewCount" />
+            @if (languages()) {
+              <span class="guide__langs">Speaks {{ languages() }}</span>
+            }
+            <span class="link-arrow">View profile →</span>
+          </span>
+        </a>
+      </aside>
+    </div>
+  }
+</div>

@@ -14,7 +14,7 @@
         <label for="search-mountain">Mountain</label>
         <select id="search-mountain" formControlName="mountain">
           <option value="">All mountains</option>
-          @for (mountain of mountains; track mountain) {
+          @for (mountain of mountains(); track mountain) {
             <option [value]="mountain">{{ mountain }}</option>
           }
         </select>
@@ -46,9 +46,52 @@
     <a class="link-arrow" routerLink="/explore">See all →</a>
   </div>
 
-  <ul class="popular__grid">
-    @for (hike of popularHikes(); track hike.id) {
-      <li><app-hike-card [hike]="hike" /></li>
-    }
-  </ul>
+  @let state = popular();
+  @if (state.loading) {
+    <div class="popular__grid" aria-busy="true">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  } @else if (state.error) {
+    <div class="state state--error popular__state">
+      <p>{{ state.error }}</p>
+      <button class="btn btn--outline" type="button" (click)="retry()">Try again</button>
+    </div>
+  } @else if (state.data?.length) {
+    <ul class="popular__grid">
+      @for (hike of state.data; track hike.id) {
+        <li><app-hike-card [hike]="hike" /></li>
+      }
+    </ul>
+  } @else {
+    <div class="state popular__state">
+      <p>No upcoming hikes yet. Guides, be the first to publish one!</p>
+      <a class="btn btn--primary" routerLink="/become-a-guide">Become a guide</a>
+    </div>
+  }
+</section>
+
+<section class="how" aria-labelledby="how-title">
+  <div class="container">
+    <h2 id="how-title">How Jbalna works</h2>
+    <ol class="how__steps">
+      <li>
+        <span class="how__num" aria-hidden="true">1</span>
+        <h3>Find a hike</h3>
+        <p>Filter by mountain, date and level. Every hike shows distance, elevation and duration.</p>
+      </li>
+      <li>
+        <span class="how__num" aria-hidden="true">2</span>
+        <h3>Book your spot</h3>
+        <p>Choose a date and the number of spots. Your guide sees your booking right away.</p>
+      </li>
+      <li>
+        <span class="how__num" aria-hidden="true">3</span>
+        <h3>Hike, then review</h3>
+        <p>Meet your guide at the meeting point, enjoy the trail, and rate the guide afterwards.</p>
+      </li>
+    </ol>
+    <a class="link-arrow" routerLink="/become-a-guide">You are a guide? Publish your hikes →</a>
+  </div>
 </section>

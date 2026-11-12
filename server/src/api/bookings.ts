@@ -58,7 +58,7 @@ bookingsRouter.post('/', async (req, res) => {
 // GET /api/bookings/mine  -> the hiker's bookings, newest hike first, with review status
 bookingsRouter.get('/mine', async (_req, res) => {
   const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT b.id, b.spots, b.status, b.created_at AS bookedAt,
+    `SELECT b.id, b.spots, b.status, DATE_FORMAT(b.created_at, '%Y-%m-%d') AS bookedAt,
             h.id AS hikeId, h.date, h.price_dt AS priceDt, h.meeting_point AS meetingPoint,
             h.date < CURDATE() AS isPast,
             r.title, r.mountain, r.level, r.duration_hours AS durationHours,

@@ -1,0 +1,62 @@
+<div class="container page">
+  <header class="page-head head">
+    <div>
+      <p class="eyebrow">Guides</p>
+      <h1>Hike with people who know the mountain</h1>
+      <p class="lead">Local guides publish their trails and dates on Jbalna. Verified guides have had their experience and certifications checked by our team.</p>
+    </div>
+
+    <div class="field head__filter">
+      <label for="language">Language spoken</label>
+      <select id="language" class="input" [value]="language()" (change)="onLanguage($event)">
+        <option value="">All languages</option>
+        @for (lang of languages(); track lang) {
+          <option [value]="lang">{{ lang }}</option>
+        }
+      </select>
+    </div>
+  </header>
+
+  @let s = state();
+  @if (s.loading) {
+    <div class="card-grid" aria-busy="true">
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+  } @else if (s.error) {
+    <div class="state state--error"><p>{{ s.error }}</p></div>
+  } @else {
+    <p class="count" aria-live="polite">{{ guides().length }} {{ guides().length === 1 ? 'guide' : 'guides' }}</p>
+    <ul class="card-grid">
+      @for (guide of guides(); track guide.id) {
+        <li>
+          <a class="panel guide" [routerLink]="['/guides', guide.id]">
+            <div class="guide__top">
+              <span class="avatar" aria-hidden="true">{{ guide.name.charAt(0) }}</span>
+              <div>
+                <h2 class="guide__name">{{ guide.name }}</h2>
+                <p class="guide__region">{{ guide.region }} · {{ guide.experienceYears }} years guiding</p>
+              </div>
+            </div>
+            @if (guide.verified) {
+              <span class="verified">✓ Verified guide</span>
+            }
+            <app-stars [rating]="guide.rating" [count]="guide.reviewCount" />
+            <ul class="chips">
+              @for (lang of guide.languages; track lang) {
+                <li class="chip">{{ lang }}</li>
+              }
+            </ul>
+            <p class="guide__hikes">
+              {{ guide.upcomingHikes }} upcoming {{ guide.upcomingHikes === 1 ? 'hike' : 'hikes' }}
+              <span class="link-arrow">View profile →</span>
+            </p>
+          </a>
+        </li>
+      } @empty {
+        <li class="state">No guide speaks this language yet.</li>
+      }
+    </ul>
+  }
+</div>
