@@ -6,12 +6,12 @@ import { BookingService } from '../../core/booking.service';
 import { apiMessage } from '../../core/load';
 import { Booking } from '../../core/models';
 import { ToastService } from '../../core/toast.service';
-import { MountainArt } from '../../shared/mountain-art/mountain-art';
+import { HikePhoto } from '../../shared/hike-photo/hike-photo';
 
 /** Hiker space: upcoming hikes first, then past ones with "Leave a review". */
 @Component({
   selector: 'app-my-bookings',
-  imports: [RouterLink, DatePipe, ReactiveFormsModule, MountainArt],
+  imports: [RouterLink, DatePipe, ReactiveFormsModule, HikePhoto],
   templateUrl: './my-bookings.html',
   styleUrl: './my-bookings.scss',
 })

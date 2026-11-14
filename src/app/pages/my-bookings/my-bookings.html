@@ -16,7 +16,7 @@
       <h2 id="upcoming-title" class="section-title">Upcoming</h2>
       @for (b of upcoming(); track b.id) {
         <article class="booking">
-          <app-mountain-art class="booking__art" [level]="b.level" [seed]="b.hikeId" />
+          <app-hike-photo class="booking__art" [mountain]="b.mountain" [level]="b.level" [seed]="b.hikeId" />
           <div class="booking__body">
             <h3 class="booking__title">{{ b.mountain }}</h3>
             <p>{{ b.date | date: 'EEE d MMM y' }} · {{ b.spots }} {{ b.spots === 1 ? 'spot' : 'spots' }} · with {{ b.guideName }}</p>
@@ -41,7 +41,7 @@
         <h2 id="past-title" class="section-title">Past and cancelled</h2>
         @for (b of past(); track b.id) {
           <article class="booking booking--past">
-            <app-mountain-art class="booking__art" [level]="b.level" [seed]="b.hikeId" />
+            <app-hike-photo class="booking__art" [mountain]="b.mountain" [level]="b.level" [seed]="b.hikeId" />
             <div class="booking__body">
               <h3 class="booking__title">{{ b.mountain }}</h3>
               <p>{{ b.date | date: 'EEE d MMM y' }} · {{ b.spots }} {{ b.spots === 1 ? 'spot' : 'spots' }} · with {{ b.guideName }}</p>

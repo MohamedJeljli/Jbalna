@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <!-- The letter jim, first letter of "Jbalna" in Arabic: its top stroke is a ridge with two peaks, its dot is the sun -->
+  <rect width="48" height="48" rx="11" fill="#17261f"/>
+  <path d="M8.5 19.5 16 11l5.5 6L28 9l10 9.500C26 19 12.5 23.5 12.5 31.500c0 7.5 12 10 26 5" fill="none" stroke="#f5f0e6" stroke-width="3.9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="27" cy="29.5" r="3.3" fill="#e0a83a"/>
+</svg>

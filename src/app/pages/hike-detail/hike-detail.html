@@ -18,8 +18,33 @@
 
     <div class="layout">
       <article class="main">
-        <!-- 1. Picture of the route -->
-        <app-mountain-art class="banner" [level]="h.route.level" [seed]="h.route.id" />
+        <!-- 1. Photos of the mountain (or the illustration when we have none yet) -->
+        @if (shown(); as p) {
+          <figure class="gallery">
+            <img class="gallery__main" [src]="p.src" [alt]="p.alt" [style.object-position]="p.focus" />
+            <figcaption class="gallery__caption">{{ p.alt }}</figcaption>
+            @if (photos().length > 1) {
+              <ul class="gallery__thumbs" aria-label="Photos">
+                @for (thumb of photos(); track thumb.src; let i = $index) {
+                  <li>
+                    <button
+                      class="gallery__thumb"
+                      type="button"
+                      [class.is-active]="i === photoIndex()"
+                      [attr.aria-pressed]="i === photoIndex()"
+                      [attr.aria-label]="'Photo ' + (i + 1) + ': ' + thumb.alt"
+                      (click)="photoIndex.set(i)"
+                    >
+                      <img [src]="thumb.small" alt="" loading="lazy" [style.object-position]="thumb.focus" />
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          </figure>
+        } @else {
+          <app-mountain-art class="banner" [level]="h.route.level" [seed]="h.route.id" />
+        }
 
         <h1 class="title">{{ h.route.title }}</h1>
         <p class="subtitle">{{ h.route.mountain }} · {{ h.route.region }}</p>

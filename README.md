@@ -40,6 +40,7 @@ Other things we took care of:
 - The site works on phone, tablet and desktop
 - Every form field has a label, the site can be used with the keyboard, and the colours respect the contrast from our charter
 - Pages are lazy-loaded, except the home page
+- The photos are ours, taken during our hikes on the four mountains. A route on a mountain we have no photo of yet gets a drawn illustration instead.
 
 The admin space from our sitemap is not done yet.
 

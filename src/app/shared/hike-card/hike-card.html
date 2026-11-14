@@ -1,6 +1,6 @@
 @let h = hike();
 <a class="card" [routerLink]="['/hikes', h.id]">
-  <app-mountain-art class="card__art" [level]="h.route.level" [seed]="h.route.id" />
+  <app-hike-photo class="card__art" [mountain]="h.route.mountain" [level]="h.route.level" [seed]="h.route.id" />
 
   <div class="card__body">
     <h3 class="card__title">{{ h.route.mountain }}</h3>

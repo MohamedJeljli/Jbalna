@@ -6,6 +6,7 @@ import { catchError, of } from 'rxjs';
 import { HikeService } from '../../core/hike.service';
 import { LOADING, load } from '../../core/load';
 import { LEVELS } from '../../core/models';
+import { HERO_PHOTO } from '../../core/photos';
 import { HikeCard } from '../../shared/hike-card/hike-card';
 
 @Component({
@@ -23,6 +24,7 @@ export class Home {
     initialValue: [],
   });
   protected readonly levels = LEVELS;
+  protected readonly heroPhoto = HERO_PHOTO;
   protected readonly today = new Date().toISOString().slice(0, 10);
 
   protected readonly search = inject(FormBuilder).nonNullable.group({

@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth.service';
 import { BookingService } from '../../core/booking.service';
 import { HikeService } from '../../core/hike.service';
 import { LOADING, apiMessage, load } from '../../core/load';
+import { photosOf } from '../../core/photos';
 import { ToastService } from '../../core/toast.service';
 import { MountainArt } from '../../shared/mountain-art/mountain-art';
 import { Stars } from '../../shared/stars/stars';
@@ -34,6 +35,14 @@ export class HikeDetailPage {
     initialValue: LOADING,
   });
   protected readonly hike = computed(() => this.state().data);
+
+  /** Gallery: photos of the mountain, and the one shown in large (back to the first on another hike). */
+  protected readonly photos = computed(() => {
+    const route = this.hike()?.route;
+    return route ? photosOf(route.mountain, route.level) : [];
+  });
+  protected readonly photoIndex = linkedSignal(() => (this.photos(), 0));
+  protected readonly shown = computed(() => this.photos()[this.photoIndex()] ?? null);
 
   /** Date chosen in the booking card: this hike by default, or another date of the same route. */
   protected readonly selectedId = linkedSignal(() => {

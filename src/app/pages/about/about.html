@@ -1,9 +1,10 @@
 <section class="hero">
-  <div class="container">
+  <img class="hero__photo" [src]="heroPhoto" alt="" fetchpriority="high" />
+  <div class="container hero__content">
     <p class="eyebrow hero__eyebrow">About us</p>
     <h1>“Jbalna” means “our mountains”.</h1>
     <p class="lead hero__lead">
-      Tunisia has wild ridges, cedar and oak forests and a summit at 1,544 m, yet hiking here still runs on Facebook groups and word of mouth. Jbalna gives the mountains one meeting point.
+      Tunisia has wild ridges, pine and oak forests and summits close to 1,300 m, yet hiking here still runs on Facebook groups and word of mouth. Jbalna gives the mountains one meeting point.
     </p>
   </div>
 </section>
@@ -24,6 +25,23 @@
         <h3>Invisible guides</h3>
         <p>Local guides live on word of mouth and have no shop window to publish their routes.</p>
       </li>
+    </ul>
+  </section>
+
+  <section class="ours" aria-labelledby="ours-title">
+    <h2 id="ours-title" class="section-title">It started with our own hikes</h2>
+    <p class="ours__lead">
+      We are hikers first. The photos on this site were taken by us and our friends on Zaghouan, Ressas, Serj and Bargou, the four mountains Jbalna starts with.
+    </p>
+    <ul class="ours__grid">
+      @for (p of photos; track p.src) {
+        <li>
+          <figure class="ours__photo">
+            <img [src]="p.small" [alt]="p.alt" [style.object-position]="p.focus" loading="lazy" />
+            <figcaption>{{ p.alt }}</figcaption>
+          </figure>
+        </li>
+      }
     </ul>
   </section>
 

@@ -1,8 +1,8 @@
-// Hero: forest green, with the ridges and sun of the Jbalna cover
+// Hero: a photo taken above the clouds, darkened with the forest green so the text stays readable
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 48px 0 96px;
+  padding: 56px 0 72px;
   background: var(--forest);
   color: var(--sand);
 
@@ -10,35 +10,42 @@
     max-width: 18ch;
     color: var(--sand);
   }
+
+  // On phones the text covers the whole photo, so the veil is even
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(23 38 31 / 62%);
+  }
+
+  @media (min-width: 768px) {
+    padding: 88px 0 112px;
+
+    &::after {
+      background: linear-gradient(90deg, rgb(23 38 31 / 88%) 0%, rgb(23 38 31 / 60%) 45%, rgb(23 38 31 / 12%) 100%);
+    }
+  }
 }
 
-.hero__ridges {
+.hero__photo {
   position: absolute;
-  inset: auto 0 0;
+  inset: 0;
   width: 100%;
-  height: 120px;
-}
-
-.hero__sun {
-  display: none;
-  position: absolute;
-  right: 12%;
-  top: 56px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--ochre);
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
 }
 
 .hero__content {
   position: relative;
+  z-index: 1;
 }
 
 .hero__lead {
   max-width: 44ch;
   margin-top: 12px;
   font-size: 18px;
-  opacity: 0.85;
 }
 
 // Quick search: stacked on mobile, one bar from tablet up

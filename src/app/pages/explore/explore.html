@@ -107,7 +107,7 @@
           @for (hike of state.data; track hike.id) {
             <li>
               <article class="row">
-                <app-mountain-art class="row__art" [level]="hike.route.level" [seed]="hike.route.id" />
+                <app-hike-photo class="row__art" [mountain]="hike.route.mountain" [level]="hike.route.level" [seed]="hike.route.id" />
                 <div class="row__main">
                   <h3 class="row__title">
                     <a [routerLink]="['/hikes', hike.id]">{{ hike.route.title }}</a>

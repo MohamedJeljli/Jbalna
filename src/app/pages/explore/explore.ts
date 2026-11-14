@@ -7,7 +7,7 @@ import { catchError, debounceTime, map, of, switchMap } from 'rxjs';
 import { HikeService } from '../../core/hike.service';
 import { LOADING, load } from '../../core/load';
 import { HikeFilters, LEVELS } from '../../core/models';
-import { MountainArt } from '../../shared/mountain-art/mountain-art';
+import { HikePhoto } from '../../shared/hike-photo/hike-photo';
 import { Stars } from '../../shared/stars/stars';
 
 const NO_PRICE_LIMIT = 100;
@@ -18,7 +18,7 @@ const NO_PRICE_LIMIT = 100;
  */
 @Component({
   selector: 'app-explore',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe, MountainArt, Stars],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, HikePhoto, Stars],
   templateUrl: './explore.html',
   styleUrl: './explore.scss',
 })

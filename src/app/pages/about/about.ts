@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ABOUT_HERO_PHOTO, ABOUT_PHOTOS } from '../../core/photos';
 
 @Component({
   selector: 'app-about',
@@ -8,6 +9,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './about.scss',
 })
 export class About {
+  protected readonly heroPhoto = ABOUT_HERO_PHOTO;
+  protected readonly photos = ABOUT_PHOTOS;
+
   protected readonly faq = [
     {
       q: 'How do I pay for a hike?',
