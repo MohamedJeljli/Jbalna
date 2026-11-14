@@ -36,11 +36,11 @@ const guides = [
     key: 'yosra',
     name: 'Yosra Gharbi',
     email: 'yosra@jbalna.tn',
-    region: 'Kasserine',
+    region: 'Ben Arous',
     languages: 'Arabic, English',
     years: 5,
     verified: false,
-    bio: 'Geography teacher and hiker from Kasserine. I lead small groups to the top of Djebel Chambi, the highest point of Tunisia, and gentler walks in the national park for families.',
+    bio: 'Geography teacher and hiker from Mornag. I take small groups and families on the easy paths around Djebel Ressas, half an hour from Tunis, for a first taste of the mountain.',
   },
 ];
 
@@ -104,30 +104,17 @@ const routes = [
       'Into the protected maple and oak forest of Djebel Serj, one of the most unusual woods of Tunisia, up to a cool spring where we have lunch in the shade.',
   },
   {
-    key: 'chambi',
+    key: 'ressas-easy',
     guide: 'yosra',
-    title: 'Chambi summit, roof of Tunisia',
-    mountain: 'Djebel Chambi',
-    region: 'Kasserine',
-    level: 'Hard',
-    km: 14,
-    elevation: 900,
-    hours: 7,
-    description:
-      'The classic climb to the highest point of the country (1,544 m) inside Chambi National Park. Long day, early start; the reward is a view over the whole of central Tunisia.',
-  },
-  {
-    key: 'chambi-easy',
-    guide: 'yosra',
-    title: 'Chambi foothills discovery',
-    mountain: 'Djebel Chambi',
-    region: 'Kasserine',
+    title: 'Ressas foothills walk',
+    mountain: 'Djebel Ressas',
+    region: 'Ben Arous',
     level: 'Easy',
     km: 6,
     elevation: 250,
     hours: 3,
     description:
-      'A family walk in the lower park: Aleppo pines, the eco-museum, and a good chance to spot Barbary sheep (mouflons) with the binoculars we bring.',
+      'A family walk at the foot of Djebel Ressas, through olive groves and pines, with the rocky ridge above us the whole way. No scrambling, just a good path and a picnic with a view.',
   },
 ];
 
@@ -142,8 +129,7 @@ const hikes: [string, string, number, number, number, string][] = [
   ['b2', 'bargou', 11, 35, 15, 'Bargou village mosque, 9:00'],
   ['s1', 'serj', 6, 40, 12, 'Kesra main square, 8:30'],
   ['s-past', 'serj', -20, 40, 12, 'Kesra main square, 8:30'],
-  ['c1', 'chambi', 12, 70, 8, 'Chambi park entrance, 6:30'],
-  ['ce1', 'chambi-easy', 5, 30, 15, 'Chambi eco-museum, 9:30'],
+  ['re1', 'ressas-easy', 5, 30, 15, 'Mornag train station, 9:30'],
 ];
 
 // [key, hike, hiker, spots]
